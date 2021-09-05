@@ -1,6 +1,9 @@
 import os
 import hashlib
 import py_avataaars as pa
+import secrets
+
+import pixelizer
 
 style_list = [pa.AvatarStyle.CIRCLE]
 skin_color_list = [pa.SkinColor.LIGHT,
@@ -131,45 +134,46 @@ accessories_type_list = [pa.AccessoriesType.DEFAULT,
                          pa.AccessoriesType.ROUND,
                          pa.AccessoriesType.SUNGLASSES,
                          pa.AccessoriesType.WAYFARERS]
-clothe_type_list = [pa.ClotheType.BLAZER_SHIRT,
-                    pa.ClotheType.BLAZER_SWEATER,
-                    pa.ClotheType.COLLAR_SWEATER,
-                    pa.ClotheType.GRAPHIC_SHIRT,
-                    pa.ClotheType.HOODIE,
-                    pa.ClotheType.OVERALL,
-                    pa.ClotheType.SHIRT_CREW_NECK,
-                    pa.ClotheType.SHIRT_SCOOP_NECK,
-                    pa.ClotheType.SHIRT_V_NECK]
-clothe_color_list = [pa.Color.BLACK,
-                     pa.Color.BLUE_01,
-                     pa.Color.BLUE_02,
-                     pa.Color.BLUE_03,
-                     pa.Color.GRAY_01,
-                     pa.Color.GRAY_02,
-                     pa.Color.HEATHER,
-                     pa.Color.PASTEL_BLUE,
-                     pa.Color.PASTEL_GREEN,
-                     pa.Color.PASTEL_ORANGE,
-                     pa.Color.PASTEL_RED,
-                     pa.Color.PASTEL_YELLOW,
-                     pa.Color.PINK,
-                     pa.Color.RED,
-                     pa.Color.WHITE]
-clothe_graphic_type_list = [pa.ClotheGraphicType.BAT,
-                            pa.ClotheGraphicType.CUMBIA,
-                            pa.ClotheGraphicType.DEER,
-                            pa.ClotheGraphicType.DIAMOND,
-                            pa.ClotheGraphicType.HOLA,
-                            pa.ClotheGraphicType.PIZZA,
-                            pa.ClotheGraphicType.RESIST,
-                            pa.ClotheGraphicType.SELENA,
-                            pa.ClotheGraphicType.BEAR,
-                            pa.ClotheGraphicType.SKULL_OUTLINE,
-                            pa.ClotheGraphicType.SKULL]
+cloth_type_list = [pa.ClotheType.BLAZER_SHIRT,
+                   pa.ClotheType.BLAZER_SWEATER,
+                   pa.ClotheType.COLLAR_SWEATER,
+                   pa.ClotheType.GRAPHIC_SHIRT,
+                   pa.ClotheType.HOODIE,
+                   pa.ClotheType.OVERALL,
+                   pa.ClotheType.SHIRT_CREW_NECK,
+                   pa.ClotheType.SHIRT_SCOOP_NECK,
+                   pa.ClotheType.SHIRT_V_NECK]
+cloth_color_list = [pa.Color.BLACK,
+                    pa.Color.BLUE_01,
+                    pa.Color.BLUE_02,
+                    pa.Color.BLUE_03,
+                    pa.Color.GRAY_01,
+                    pa.Color.GRAY_02,
+                    pa.Color.HEATHER,
+                    pa.Color.PASTEL_BLUE,
+                    pa.Color.PASTEL_GREEN,
+                    pa.Color.PASTEL_ORANGE,
+                    pa.Color.PASTEL_RED,
+                    pa.Color.PASTEL_YELLOW,
+                    pa.Color.PINK,
+                    pa.Color.WHITE]
+cloth_graphic_type_list = [pa.ClotheGraphicType.BAT,
+                           pa.ClotheGraphicType.CUMBIA,
+                           pa.ClotheGraphicType.DEER,
+                           pa.ClotheGraphicType.DIAMOND,
+                           pa.ClotheGraphicType.HOLA,
+                           pa.ClotheGraphicType.PIZZA,
+                           pa.ClotheGraphicType.RESIST,
+                           pa.ClotheGraphicType.SELENA,
+                           pa.ClotheGraphicType.BEAR,
+                           pa.ClotheGraphicType.SKULL_OUTLINE,
+                           pa.ClotheGraphicType.SKULL]
+
 
 def get_object_info(a: pa.PyAvataaar):
-    info = '''{}/{}/{}/{}/{}/{}/{}/{}/{}/{}/{}/{}/{}/{}/{}''' \
+    info = '''{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}''' \
         .format(a.style,
+                a.background_color,
                 a.skin_color,
                 a.hair_color,
                 a.facial_hair_type,
@@ -178,8 +182,8 @@ def get_object_info(a: pa.PyAvataaar):
                 a.hat_color,
                 a.mouth_type,
                 a.eye_type,
-                a.eyebrow_type,
                 a.nose_type,
+                a.eyebrow_type,
                 a.accessories_type,
                 a.clothe_type,
                 a.clothe_color,
@@ -191,44 +195,52 @@ def generate_object_md5(info):
     result = hashlib.md5(info.encode()).hexdigest()
     return result
 
-def generate_avatar_png_x():
-    for style in style_list:
-        for skin in skin_color_list:
-            for hair in hair_color_list:
-                for fhairt in facial_hair_type_list:
-                    for fhairc in facial_hair_color_list:
-                        for ttl in top_type_list:
-                            for hcl in hat_color_list:
-                                for mtl in mouth_type_list:
-                                    for etl in eye_type_list:
-                                        for ebtl in eyebrow_type_list:
-                                            for ntl in nose_type_list:
-                                                for atl in accessories_type_list:
-                                                    for ctl in clothe_type_list:
-                                                        for cctl in clothe_color_list:
-                                                            for cgtl in clothe_graphic_type_list:
-                                                                avatar = pa.PyAvataaar(
-                                                                    style=style,
-                                                                    skin_color=skin,
-                                                                    hair_color=hair,
-                                                                    facial_hair_type=fhairt,
-                                                                    facial_hair_color=fhairc,
-                                                                    top_type=ttl,
-                                                                    hat_color=hcl,
-                                                                    mouth_type=mtl,
-                                                                    eye_type=etl,
-                                                                    eyebrow_type=ebtl,
-                                                                    nose_type=ntl,
-                                                                    accessories_type=atl,
-                                                                    clothe_type=ctl,
-                                                                    clothe_color=cctl,
-                                                                    clothe_graphic_type=cgtl)
-                                                                info = get_object_info(avatar)
-                                                                hash = generate_object_md5(info)
-                                                                file_name = './png/{}.png'.format(hash)
-                                                                if os.path.isfile(file_name):
-                                                                    print("File already exists")
-                                                                else:
-                                                                    print("File does not exist")
-                                                                    avatar.render_png_file(file_name)
-generate_avatar_png_x()
+
+def generate_avatar_png_x(random):
+    proc = 0
+    unproc = 0
+    output = './png'
+    if os.path.exists(output):
+        print('''Folder './png' exists''')
+    else:
+        print('''Creating folder './png' ''')
+        os.mkdir('./png')
+
+    for i in range(random):
+        avatar = pa.PyAvataaar(
+            style=secrets.choice(style_list),
+            skin_color=secrets.choice(skin_color_list),
+            hair_color=secrets.choice(hair_color_list),
+            facial_hair_type=secrets.choice(facial_hair_type_list),
+            facial_hair_color=secrets.choice(facial_hair_color_list),
+            top_type=secrets.choice(top_type_list), hat_color=secrets.choice(hat_color_list),
+            mouth_type=secrets.choice(mouth_type_list), eye_type=secrets.choice(eye_type_list),
+            eyebrow_type=secrets.choice(eyebrow_type_list), nose_type=secrets.choice(nose_type_list),
+            accessories_type=secrets.choice(accessories_type_list),
+            clothe_type=secrets.choice(cloth_type_list),
+            clothe_color=secrets.choice(cloth_color_list),
+            clothe_graphic_type=secrets.choice(cloth_graphic_type_list))
+        info = get_object_info(avatar)
+        object_txt = open('output.txt', 'a')
+        object_txt.write(info)
+        object_txt.close()
+        print(proc)
+        # hash = generate_object_md5(info)
+        hash = info
+        file_name = './png/{}.png'.format(hash)
+        if os.path.isfile(file_name):
+            unproc += 1
+            print("File already exists, UNPROC: {}".format(
+                unproc))
+        else:
+            proc += 1
+            print(
+                "File does not exist, creating new avatar, PROC: {}".format(
+                    proc))
+            avatar.render_png_file(file_name)
+            print(
+                "File does not exist, creating new pixel avatar")
+            # pixelizer.run(file_name, '{}.png'.format(hash))
+
+
+generate_avatar_png_x(20000)
